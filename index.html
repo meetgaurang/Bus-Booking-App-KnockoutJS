@@ -1,0 +1,139 @@
+<html>
+	<head>
+		<link rel="stylesheet" type="text/css" href="style.css">
+		<script src="knockout-3.2.0.debug.js"></script>
+		<script src="knockout.mapping-latest.debug.js"></script>
+		<script type="text/html" id="van.html">
+				<table class="van" >
+					<tr>
+						<td colspan="4">Driver Seat</td>
+					</tr>
+					<tr>
+						<td data-bind="click: seatSelectionEvent, css: {selectedseat: selectedSeat()=='1'}">1</td><td></td><td data-bind="click: seatSelectionEvent, css: {selectedseat: selectedSeat()=='2'}">2</td><td data-bind="click: seatSelectionEvent, css: {selectedseat: selectedSeat()=='3'}">3</td>
+					</tr>
+					<tr>
+						<td data-bind="click: seatSelectionEvent, css: {selectedseat: selectedSeat()=='4'}">4</td><td></td><td data-bind="click: seatSelectionEvent, css: {selectedseat: selectedSeat()=='5'}">5</td><td data-bind="click: seatSelectionEvent, css: {selectedseat: selectedSeat()=='6'}">6</td>
+					</tr>
+					<tr>
+						<td data-bind="click: seatSelectionEvent, css: {selectedseat: selectedSeat()=='7'}">7</td><td></td><td data-bind="click: seatSelectionEvent, css: {selectedseat: selectedSeat()=='8'}">8</td><td data-bind="click: seatSelectionEvent, css: {selectedseat: selectedSeat()=='9'}">9</td>
+					</tr>
+				</table>
+		</script>
+		<script type="text/javascript">
+			window.onload = function(){
+				var searchData = {
+				  "from": "Ahmedabad",
+				  "to": "Pune",
+				  "date": "2nd DEC, 2014",
+				};
+				var searchresults = [
+				      {
+				      	"routeId": 1,
+				        "operatorName":"ABC Travels",
+				        "busLayout": "van.html",
+				        "fare": 200,
+				        "AC": true,
+				        "rating": 3,
+				        "reviewCount": 120
+				      },
+				      {
+				      	"routeId": 2,
+				        "operatorName":"Bon Voyage Tours & Travels",
+				        "busLayout": "van.html",
+				        "fare": 180,
+				        "AC": false,
+				        "rating": 3.5,
+				        "reviewCount": 40
+				      },
+				      {
+				      	"routeId": 3,
+				        "operatorName":"Fasttrack Travels",
+				        "busLayout": "van.html",
+				        "fare": 120,
+				        "AC": false,
+				        "rating": 2,
+				        "reviewCount": 88
+				      }
+				    ];
+				var observable = {};
+				observable.searchData = searchData;
+				observable.searchresults = searchresults;
+
+				var EachBusListing = function(data) {
+	                data.showSeatSelection = false;
+	                data.seatSelectionEvent = function(data, obj){
+	                	data.selectedSeat(obj.toElement.outerText);
+					};
+					data.selectedSeat = ko.observable();
+	                ko.mapping.fromJS(data, {}, this);
+	            };
+
+				var mapping = {
+				    'searchresults': {
+				        key: function(data) {
+				            return ko.utils.unwrapObservable(data.routeId);
+				        },
+				        create: function(options) {
+				        	return new EachBusListing(options.data);
+				        }
+				    }
+				};
+				var viewModel = ko.mapping.fromJS(observable, mapping);
+				var self = this;
+				viewModel.selectSeat = function(data){
+					// First of all hide already opened seat selection
+					if(self.selectedOperator){
+						self.selectedOperator.showSeatSelection(false);
+						if(self.selectedOperator.routeId() == data.routeId()){
+							self.selectedOperator = undefined;
+							return;
+						}
+					}
+					self.selectedOperator = viewModel.searchresults.mappedGet({routeId: data.routeId()});
+					self.selectedOperator.showSeatSelection(true);
+				};
+				ko.applyBindings(viewModel, document.getElementById('example'));
+			}
+		</script>
+	</head>
+	<body class="center">
+		<section id="example">
+			<div style="padding-left: 30px;">
+			<h3> Choose the Bus:</h3>
+			<section>
+				From:<input type="text" data-bind="value: $data.searchData.from" disabled></input>
+				To:<input type="text" data-bind="value: $data.searchData.to" disabled></input>
+			</section>
+			<section>On:<input type="text" data-bind="value: $data.searchData.date" disabled></input></section>
+			</div>
+			<ul data-bind="foreach: searchresults">
+				<li>
+					<div>
+						<div class="operator-name"><label data-bind="text: operatorName"></label></div>
+						<div class="facilities">
+							<span data-bind="if: AC()">AC</span>
+							<span data-bind="if: !AC()">Non AC</span>
+						</div>
+						<div class="cost"><label data-bind="text: fare()+' INR'"></label></div>
+						<div class="rating">
+							<label data-bind="text: rating()+' out of 5'"></label>
+							Number of Reviews: <label data-bind="text: reviewCount"></label>
+						</div>
+						<div class="seat-selection-text">
+							<button data-bind="click: $parent.selectSeat">Select Seat</button>
+						</div>
+						<div class="seat-selection-msg">
+							<label data-bind="visible:selectedSeat(), text: 'You chose Seat No.'+selectedSeat() "/>
+						</div>
+						<div class="book-button">
+							<input type="button" value="Book"></input>
+						</div>
+					</div>
+					<div class="choose-seat" data-bind="visible: $data.showSeatSelection, template: {name: busLayout()}">
+
+					</div>
+				</li>
+			</ul>
+		</section>
+	</body>
+</html>

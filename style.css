@@ -1,0 +1,98 @@
+
+div {
+  margin: 20px;
+}
+ 
+ul {
+  list-style-type: none;
+  width: 1024px;
+  align-content: center;
+  font-family: verdana;
+  font-size: 12px;
+}
+ 
+h3 {
+  font: bold 20px/1.5 Helvetica, Verdana, sans-serif;
+}
+ 
+li img {
+  float: left;
+  margin: 0 15px 0 0;
+}
+ 
+li p {
+  font: 200 12px/1.5 Georgia, Times New Roman, serif;
+}
+ 
+li {
+  padding: 10px;
+  overflow: auto;
+  border-top: 1px solid lightgray;
+  margin: 5px;
+}
+ 
+li:hover {
+  background: #eee;
+  cursor: pointer;
+}
+
+.center {
+    margin-left: auto;
+    margin-right: auto;
+    
+}
+
+/* Search Listing Page */
+
+.mid-size-car{
+  width: 200px;
+  height: 400px;
+}
+.operator-name{
+  width: 20%;
+  float: left;
+}
+.facilities{
+  width: 5%;
+  float: left;
+}
+.cost{
+  width: 5%;
+  float: left;  
+}
+.rating{
+  width: 10%;
+  float: left;  
+}
+.seat-selection-text{
+  width: 10%;
+  float: left; 
+}
+.book-button{
+  width: 10%;
+  float: left; 
+}
+.choose-seat{
+
+}
+.seat-selection-msg{
+  width: 10%;
+  float: left; 
+}
+
+/* Bus Layout*/
+.van{
+height: 90px;
+border-width: 1px;
+border-color: black;
+border-style: solid;
+width: 150px;
+}
+
+.van td{
+  border: 1px black solid;
+}
+
+.selectedseat{
+  background-color: azure;
+}
